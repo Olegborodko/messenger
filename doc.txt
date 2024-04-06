@@ -6,18 +6,24 @@ npm run build
 
 sudo apt install mongodb
 
+react package.json
+"proxy": "http://example.com",
 ======================
 - сделать websocket что-бы обновления в базе данных сразу отображались
-- сделать что-бы прога добавляла сообщения по клику, и удаляла их
 - сделать простой поиск по коллекции
-- сделать модель, возможно миграции
-- прикрутить библиотеку к react что-бы отправлять ajax 
-- сделать в react хранилище stage
+X сделать выборку всех messages
+X сделать модель
+- возможно сделать миграции migrate-mongo
+X прикрутить библиотеку к react что-бы отправлять ajax 
+- сделать в react хранилище localStorage, и возможно MobX или Recoil
 - можно добавить вход по google или пока-что сделать простой вход по паролю
 - мне нужен доступ к программе которая собирает все данные с соц сетей и почты
 - мне нужен digitalocean аккаунт, что-бы пробовать залить приложение
 - нужно переводить voice в текст, найти решения на node, возможно что-то заюзать
 - нужно этот текст скормить gpt и что-бы он его переоформил красиво
+
+- нужно сделать https
+- настроить фаервол
 
 - и этот messanger потом нужно будет привязать к telegram
 
@@ -32,3 +38,8 @@ sudo apt install mongodb
   "email": "delt@gmail.com",
   "message": "hello, I need your help"
 }
+
+===========================
+https://stackoverflow.com/questions/48378337/create-react-app-not-picking-up-env-files
+https://stackoverflow.com/questions/48291950/proxy-not-working-for-react-and-node
+еще не забудь на node - cors поставить

@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 
 const HomePage = () => {
-  // const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-  // useEffect(() => {
-  //   axios.get('https://api.example.com/data')
-  //     .then(response => {
-  //       // Обработка полученных данных
-  //       setData(response.data);
-  //     })
-  //     .catch(error => {
-  //       // Обработка ошибок
-  //       console.error('Ошибка при выполнении GET-запроса:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios.get(backendUrl + "/messages")
+      .then(response => {
+        console.log(response.data);
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div>
-      <h1>Главная страница</h1>
-      <Link to="/about">Перейти на страницу "О нас"</Link>
+      {data.map(function (el) {
+        return (
+          <div key={el._id}>
+            {el.name}
+          </div>
+        )
+      })}
     </div>
   );
 }
