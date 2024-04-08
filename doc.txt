@@ -9,7 +9,7 @@ sudo apt install mongodb
 react package.json
 "proxy": "http://example.com",
 ======================
-- сделать websocket что-бы обновления в базе данных сразу отображались
+X сделать websocket что-бы обновления в базе данных сразу отображались
 - сделать простой поиск по коллекции
 X сделать выборку всех messages
 X сделать модель
@@ -29,6 +29,8 @@ X прикрутить библиотеку к react что-бы отправл�
 
 у сообщений будет статус, этот статус они будут получать в этой программе
 
+- добавить     "@babel/plugin-proposal-private-property-in-object": "7.16.0"
+в "dependencies" в react
 ======================
 {
   "_id": {
@@ -43,3 +45,6 @@ X прикрутить библиотеку к react что-бы отправл�
 https://stackoverflow.com/questions/48378337/create-react-app-not-picking-up-env-files
 https://stackoverflow.com/questions/48291950/proxy-not-working-for-react-and-node
 еще не забудь на node - cors поставить
+
+socket-io cors problem
+https://stackoverflow.com/questions/24058157/socket-io-node-js-cross-origin-request-blocked
