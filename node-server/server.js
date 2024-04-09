@@ -29,9 +29,9 @@ let dbConnection;
 
 app.use(cors());
 
-// app.get('/', (req, res) => {
-//   res.send('TEST SERVER');
-// });
+app.get('/', (req, res) => {
+  res.send('TEST SERVER');
+});
 
 // app.get('/messages', async (req, res) => {
 //   const messages = await Message.find();

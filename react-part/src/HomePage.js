@@ -5,7 +5,6 @@ import socketIOClient from 'socket.io-client';
 
 const HomePage = () => {
   const [data, setData] = useState([]);
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     // axios.get(backendUrl + "/messages")
@@ -16,6 +15,7 @@ const HomePage = () => {
     //   .catch(error => {
     //     console.error(error);
     //   });
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const socket = socketIOClient(backendUrl);
 
     socket.on('messages', data => {
