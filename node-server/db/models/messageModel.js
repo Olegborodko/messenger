@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  name: String,
-  email: String,
-  text: String,
+  idEmail: String,
+  from: String,
+  subject: String,
+  body: Text,
+  date: String,
   status: String,
 });
 
