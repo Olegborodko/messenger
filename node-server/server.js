@@ -4,15 +4,19 @@ const port = process.env.PORT || 3001; //
 const connect = require('./db/db');
 const http = require('http');
 const cors = require('cors');
+const path = require('path');
 const socketIo = require('socket.io');
 const Message = require('./db/models/messageModel');
 
+const buildPath = path.join(__dirname, '../react-part/build');
+
 const app = express();
+app.use(express.static(buildPath));
 const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
-    origin: process.env.SERVER_URL,
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"]
   }
 });
@@ -29,9 +33,9 @@ let dbConnection;
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('TEST SERVER');
-});
+// app.get('/', (req, res) => {
+//   res.send('TEST SERVER');
+// });
 
 // app.get('/messages', async (req, res) => {
 //   const messages = await Message.find();
