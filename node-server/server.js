@@ -32,10 +32,23 @@ let dbConnection;
 })();
 
 app.use(cors());
+app.use(express.json());
 
-// app.get('/', (req, res) => {
-//   res.send('TEST SERVER');
-// });
+app.get('/test', (req, res) => {
+  res.send('TEST SERVER');
+});
+
+app.post('/webhook', async (req, res) => {
+  console.log('Received webhook payload:', req.body);
+
+  if (req.body){
+    let data = req.body;
+    
+    // const messages = await Message.find({});
+  }
+  
+  res.status(200).send('Webhook received successfully!');
+});
 
 // app.get('/messages', async (req, res) => {
 //   const messages = await Message.find();
