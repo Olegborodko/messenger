@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema({
   idEmail: String,
   from: String,
   subject: String,
-  body: Text,
+  body: String,
   date: String,
   status: String,
 });

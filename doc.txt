@@ -153,3 +153,29 @@ cat ~/.ssh/key-name.pub
 дальше добавляем ключ pub в github
 
 git remote add second git@github.com:Olegborodko/messenger.git
+
+==================================
+
+https://zapier.com/app/dashboard
+
+{
+  body: 'message received\r\n',
+  date: 'Wed, 10 Apr 2024 18:49:56 +0300',
+  from: 'Oleg Borodko',
+  id: '18ec8b3965af86a0',
+  subject: 'test subject'
+}
+
+=================================работа с бд через terminal
+mongo
+use db_project
+db.messages.find()
+
+db.messages.insertOne({
+  idEmail: "1",
+  from: "test@gmail.com",
+  subject: "subject1",
+  body: "test text",
+  date: "Wed, 10 Apr 2024 18:49:56 +0300",
+  status: "status1"
+})

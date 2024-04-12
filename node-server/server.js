@@ -39,14 +39,22 @@ app.get('/test', (req, res) => {
 });
 
 app.post('/webhook', async (req, res) => {
-  console.log('Received webhook payload:', req.body);
-
-  if (req.body){
+  if (req.body) {
     let data = req.body;
-    
+
+    if (data) {
+      let id = data.id;
+      let messageObj = await Message.findOne({ idEmail: 1 });
+
+      if (!messageObj){
+        let newMessage = await Message.insertOne({test: 1});
+        console.log(newMassage);
+      }
+    }
+
     // const messages = await Message.find({});
   }
-  
+
   res.status(200).send('Webhook received successfully!');
 });
 
