@@ -29,8 +29,16 @@ const HomePage = () => {
     <div>
       {data.map(function (el) {
         return (
-          <div key={el._id}>
-            {el.name}
+          <div className='email-block' key={el._id}>
+            <div>
+              {el.idEmail} | {el.date}
+            </div>
+            <div>
+              {el.from} | {el.subject}
+            </div>
+            <div>
+              {el.body}
+            </div>
           </div>
         )
       })}

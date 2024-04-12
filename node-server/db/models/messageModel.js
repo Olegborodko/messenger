@@ -8,8 +8,8 @@ const messageSchema = new mongoose.Schema({
   body: String,
   date: String,
   status: String,
-});
+}, { strict: 'throw' });
 
 const Message = mongoose.model('Message', messageSchema);
 
-module.exports = Message;
+module.exports = { Message, mongoose };

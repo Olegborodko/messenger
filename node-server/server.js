@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('express-async-errors');
 const express = require('express');
 const port = process.env.PORT || 3001; //
 const connect = require('./db/db');
@@ -6,7 +7,7 @@ const http = require('http');
 const cors = require('cors');
 const path = require('path');
 const socketIo = require('socket.io');
-const Message = require('./db/models/messageModel');
+const { Message, mongoose } = require('./db/models/messageModel');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -34,28 +35,49 @@ let dbConnection;
 app.use(cors());
 app.use(express.json());
 
+function errorFill(errObj) {
+  return Object.assign(new Error(errObj.message || 'error'), { status: errObj.status });
+}
+
+const errorHandling = (err, req, res, next) => {
+  res.status(err.status || 500).json({
+    msg: err.message,
+    status: err.status,
+  });
+};
+
 app.get('/test', (req, res) => {
   res.send('TEST SERVER');
 });
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', async (req, res, next) => {
   if (req.body) {
     let data = req.body;
+    let id = data.id;
+    let oneMessage = await Message.findOne({ idEmail: id });
 
-    if (data) {
-      let id = data.id;
-      let messageObj = await Message.findOne({ idEmail: 1 });
+    if (!oneMessage) {
+      let newMessage = new Message({
+        _id: new mongoose.Types.ObjectId(),
+        idEmail: id,
+        ...data
+      });
 
-      if (!messageObj){
-        let newMessage = await Message.insertOne({test: 1});
-        console.log(newMassage);
-      }
+      await newMessage.save();
+      res.status(200).end();
+    } else {
+      next(errorFill({status: 304, message: "the entry already exists"}));
     }
-
-    // const messages = await Message.find({});
   }
 
-  res.status(200).send('Webhook received successfully!');
+  // const messages = await Message.find({});
+
+  // const error = new Error('Произошла ошибка');
+  // error.status = 500;
+  // next(error);
+
+  // next(errorFill({status: 400}));
+  res.status(200).end();
 });
 
 // app.get('/messages', async (req, res) => {
@@ -76,6 +98,8 @@ io.on('connection', socket => {
     clearInterval(intervalId);
   });
 });
+
+app.use(errorHandling);
 
 server.listen(port, () => {
   console.log(`Server works on port ${port}`);
