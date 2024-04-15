@@ -7,6 +7,7 @@ const http = require('http');
 const cors = require('cors');
 const path = require('path');
 const socketIo = require('socket.io');
+const sendEmail = require('./parts/sendToGmail');
 const { Message, mongoose } = require('./db/models/messageModel');
 
 const buildPath = path.join(__dirname, '../react-part/build');
@@ -66,7 +67,7 @@ app.post('/webhook', async (req, res, next) => {
       await newMessage.save();
       res.status(200).end();
     } else {
-      next(errorFill({status: 304, message: "the entry already exists"}));
+      next(errorFill({ status: 304, message: "the entry already exists" }));
     }
   }
 
@@ -84,6 +85,22 @@ app.post('/webhook', async (req, res, next) => {
 //   const messages = await Message.find();
 //   res.send(messages);
 // });
+
+app.post('/send-email', async (req, res, next) => {
+  let send = await sendEmail({
+    from: process.env.MAIL_FROM,
+    to: process.env.MAIL_TO,
+    subject: 'test subject',
+    // text: 'text without html'
+    html: '<p>test your letter in HTML form</p>'
+  });
+
+  if (send.success) {
+    res.status(200).end();
+  } else {
+    next(errorFill({ status: 500, message: send.body }));
+  }
+});
 
 io.on('connection', socket => {
   console.log('Client connected');

@@ -180,8 +180,10 @@ db.messages.insertOne({
   status: "status1"
 })
 
+db.messages.deleteMany({});
 =================================
 код продолжается если явно были не указаны после res.status(200).send('success')
 return, res.end() или next()
 
-=================================
+================================= библиотека для всплыв уведомлений
+react-toastify
