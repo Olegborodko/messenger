@@ -2,6 +2,7 @@ npm start
 
 npm run build
 
+ssh root@45.55.137.69
 ======================
 
 sudo apt install mongodb
@@ -22,11 +23,15 @@ X прикрутить библиотеку к react что-бы отправл�
 - нужно переводить voice в текст, найти решения на node, возможно что-то заюзать
 - нужно этот текст скормить gpt и что-бы он его переоформил красиво
 
-- нужно сделать https
 - настроить фаервол
 - сделать что-бы в случае падения сервера node и react сами поднимались при возможности
 
 - и этот messanger потом нужно будет привязать к telegram
+
+X купить домен, без него не хочет работать oauth2
+- настроить dns
+- нужно сделать https
+- настроить отправку писем
 
 у сообщений будет статус, этот статус они будут получать в этой программе
 
@@ -38,7 +43,7 @@ X прислать пару писем на gmail самому себе
 X вытянуть данные из Zapier
 X записать данные в базу данных по id, если их еще там нет
 X потом вытянуть из базы эти данные, отобразить
-- настрой pm2
+X настрой pm2
 ======================
 {
   "_id": {
@@ -187,3 +192,77 @@ return, res.end() или next()
 
 ================================= библиотека для всплыв уведомлений
 react-toastify
+
+=================================vim
+:q
+:q!
+:qa! - закрыть все открытые файлы без сохранения
+:w - сохранить изменения
+
+rm .*.swp
+rm .server.js.swp
+
+I - insert
+shift + :
+
+=================================domain
+kerriganlink.com
+https://ap.www.namecheap.com/Domains/DomainControlPanel/kerriganlink.com/advancedns
+
+=================================ssl free
+sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx
+-это автоматически установить nginx на порт 80
+
+-останавливаем nginx что-бы освободить порт 80
+sudo systemctl stop nginx
+
+- создаем ключи
+sudo certbot certonly --standalone -d kerriganlink.com
+
+- как меняется настройка сервера
+const https = require('https');
+const fs = require('fs');
+const app = require('express')();
+
+const options = {
+  key: fs.readFileSync('/path/to/privkey.pem'), // Путь к вашему закрытому ключу SSL
+  cert: fs.readFileSync('/path/to/fullchain.pem'), // Путь к вашему сертификату SSL
+};
+
+https.createServer(options, app).listen(443, () => {
+  console.log('Сервер запущен на порту 443');
+});
+==
+- тут будут лежать ключи ssl
+/etc/letsencrypt 
+
+-дальше заходим в etc/nginx/sites-available
+-создаем файл конфигурации nginx
+sudo nano kerriganlink.com.conf
+
+- записываем туда такой код
+server {
+    listen 443 ssl;
+    server_name kerriganlink.com;
+
+    ssl_certificate /etc/letsencrypt/live/kerriganlink.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kerriganlink.com/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+-делаем символическую ссылку
+sudo ln -s /etc/nginx/sites-available/kerriganlink.com.conf /etc/nginx/sites-enabled/
+
+-проверяем что nginx настроен без ошибок
+sudo nginx -t
+
+pm2 start app.js --name "node-server" --watch --port 3000

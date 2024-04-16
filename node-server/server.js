@@ -1,9 +1,11 @@
 require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
-const port = process.env.PORT || 3001; //
+const port = process.env.PORT || 3001;
 const connect = require('./db/db');
-const http = require('http');
+// const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const socketIo = require('socket.io');
@@ -14,7 +16,16 @@ const buildPath = path.join(__dirname, '../react-part/build');
 
 const app = express();
 app.use(express.static(buildPath));
-const server = http.createServer(app);
+// const server = http.createServer(app);
+
+const options = {
+  key: fs.readFileSync(process.env.KEY_PATH_PRIVKEY), 
+  cert: fs.readFileSync(process.env.KEY_PATH_FULLCHAIN),
+};
+
+const server = https.createServer(options, app).listen(port, () => {
+  console.log('Server works on port ', port);
+});
 
 const io = socketIo(server, {
   cors: {
@@ -118,6 +129,6 @@ io.on('connection', socket => {
 
 app.use(errorHandling);
 
-server.listen(port, () => {
-  console.log(`Server works on port ${port}`);
-});
+// server.listen(port, () => {
+//   console.log(`Server works on port ${port}`);
+// });
