@@ -1,0 +1,58 @@
+// пример
+// функцию connect можно подключать сколько угодно раз,
+// и соединение будет одно и тоже
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const urlDB = process.env.DB_URL || "";
+
+// эта переменная нужна что-бы не коннектиться к базе данных второй раз
+let connection = null;
+
+// Функция для подключения к базе данных
+async function connect() {
+    // Если соединение уже существует, используем его
+    if (connection) {
+        console.log('Reusing existing connection');
+        return connection;
+    }
+
+    // Попытка подключения к базе данных
+    try {
+        connection = await mongoose.connect(urlDB, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        console.log('Connected to database successfully');
+        return connection;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+        throw error;
+    }
+}
+
+// Экспортируем функцию connect для использования в других файлах
+module.exports = connect;
+
+//============================ пример export react
+
+const EmailModal = () => {
+    // код компонента
+};
+
+function anotherFunction() {
+    // код функции
+}
+
+function yetAnotherFunction() {
+    // код другой функции
+}
+
+// Экспорт по умолчанию
+export default EmailModal;
+
+// Именованные экспорты
+export { anotherFunction, yetAnotherFunction };
+
+== подключаем так
+import EmailModal, { anotherFunction, yetAnotherFunction } from './your-module';

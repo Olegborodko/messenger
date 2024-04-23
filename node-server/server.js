@@ -3,7 +3,6 @@ require('express-async-errors');
 const express = require('express');
 const port = process.env.PORT || 3001;
 const connect = require('./db/db');
-// const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const cors = require('cors');
@@ -11,6 +10,7 @@ const path = require('path');
 const socketIo = require('socket.io');
 const sendEmail = require('./parts/sendToGmail');
 const { Message, mongoose } = require('./db/models/messageModel');
+const { verifyToken } = require('./parts/googleAuth');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -19,7 +19,7 @@ app.use(express.static(buildPath));
 // const server = http.createServer(app);
 
 const options = {
-  key: fs.readFileSync(process.env.KEY_PATH_PRIVKEY), 
+  key: fs.readFileSync(process.env.KEY_PATH_PRIVKEY),
   cert: fs.readFileSync(process.env.KEY_PATH_FULLCHAIN),
 };
 
@@ -97,7 +97,7 @@ app.post('/webhook', async (req, res, next) => {
 //   res.send(messages);
 // });
 
-app.post('/send-email', async (req, res, next) => {
+app.get('/send-email', async (req, res, next) => {
   let send = await sendEmail({
     from: process.env.MAIL_FROM,
     to: process.env.MAIL_TO,
@@ -113,13 +113,40 @@ app.post('/send-email', async (req, res, next) => {
   }
 });
 
-io.on('connection', socket => {
-  console.log('Client connected');
-
-  const intervalId = setInterval(async () => {
+const sendMessages = async (socket, token) => {
+  const userEmail = await verifyToken(token);
+  if (!userEmail) {
+    socket.isAuthenticated = false;
+    socket.disconnect();
+    console.log('isAuthent false');
+  } else {
+    socket.isAuthenticated = true;
     const messages = await Message.find().sort({ timestamp: -1 });
     socket.emit('messages', messages);
-  }, 2000);
+    console.log('isAuthent true');
+  }
+}
+
+io.on('connection', async socket => {
+  let intervalId;
+  console.log('Client connected');
+
+  socket.on('google-authenticate', async (data) => {
+    if (!data || !data.data || !data.data.access_token) {
+      socket.isAuthenticated = false;
+      socket.disconnect();
+      return;
+    }
+
+    const token = data.data.access_token;
+    await sendMessages(socket, token);
+
+    if (socket.isAuthenticated) {
+      intervalId = setInterval(async () => {
+        await sendMessages(socket, token);
+      }, process.env.REFRESH_MESSAGES_INTERVAL);
+    }
+  });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected');
@@ -128,7 +155,3 @@ io.on('connection', socket => {
 });
 
 app.use(errorHandling);
-
-// server.listen(port, () => {
-//   console.log(`Server works on port ${port}`);
-// });

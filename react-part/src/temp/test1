@@ -1,0 +1,8 @@
+io.on('connection', async socket => {
+  console.log('Client connected');
+
+  socket.on('google-authenticate', async (data) => {
+    console.log('here');
+    console.log(data);
+  });
+});

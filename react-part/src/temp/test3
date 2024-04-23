@@ -1,0 +1,32 @@
+// async function verifyToken(token) {
+//   const ticket = await client.verifyIdToken({
+//     idToken: token,
+//     audience: googleClientId
+//   });
+
+//   console.log('ticket ', ticket);
+
+//   const payload = ticket.getPayload();
+
+//   // const { tokens } = await client.getToken(token);
+//   // console.log('tokens ', tokens);
+//   // client.setCredentials(tokens);
+//   // const accessToken = tokens.access_token;
+//   // const payload = ticket.getPayload();
+//   // const userId = payload['sub'];
+//   // return payload;
+//   console.log(payload);
+//   return true;
+// }
+
+
+// const googleAuth2Client = new OAuth2Client(
+//   process.env.GOOGLE_CLIENT_ID,
+//   process.env.GOOGLE_CLIENT_SECRET
+// );
+
+// async function verify(req, res, next) {
+//   const authHeader = req.headers.authorization;
+//   const token = authHeader.
+//   const ticket = await googleAuth2Client.verifyIdToken();
+// }

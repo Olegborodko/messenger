@@ -1,0 +1,40 @@
+const { OAuth2Client } = require('google-auth-library');
+const axios = require('axios');
+
+// Замените CLIENT_ID и CLIENT_SECRET на свои значения
+const clientId = 'YOUR_CLIENT_ID';
+const clientSecret = 'YOUR_CLIENT_SECRET';
+
+// Создайте экземпляр OAuth2Client
+const client = new OAuth2Client(clientId, clientSecret);
+
+async function verifyAccessToken(accessToken) {
+    try {
+        // Отправьте запрос к API Google для получения данных о пользователе
+        const response = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        // Получите данные о пользователе из ответа
+        const userData = response.data;
+        const userEmail = userData.email;
+
+        console.log('Email пользователя:', userEmail);
+        return userEmail;
+    } catch (error) {
+        console.error('Ошибка проверки токена:', error);
+        return null;
+    }
+}
+
+// Пример использования функции verifyAccessToken
+const accessToken = 'YOUR_ACCESS_TOKEN';
+verifyAccessToken(accessToken).then((email) => {
+    if (email) {
+        console.log('Токен действителен. Email пользователя:', email);
+    } else {
+        console.log('Токен недействителен.');
+    }
+});

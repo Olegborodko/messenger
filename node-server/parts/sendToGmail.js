@@ -1,12 +1,20 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+
+// const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+// const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+// const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 
 let transporter = nodemailer.createTransport({
-  service: process.env.MAIL_SERVICE,
+  // service: process.env.MAIL_SERVICE,
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASSWORD
-  }
+    user: "maddison53@ethereal.email",
+    pass: "jn7jnAPss4f63QBp6D",
+  },
 });
 
 // let mailOptions = {

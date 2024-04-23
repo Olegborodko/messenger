@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import axios from 'axios';
-import socketIOClient from 'socket.io-client';
 import EmailModal from './parts/EmailModal';
 import Button from 'react-bootstrap/Button';
+import socket from './parts/Socket';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -12,27 +11,9 @@ const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ subject: '', message: '' });
 
-  useEffect(() => {
-    // axios.get(backendUrl + "/messages")
-    //   .then(response => {
-    //     console.log(response.data);
-    //     setData(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    const socket = socketIOClient(backendUrl);
-
-    socket.on('messages', data => {
-      setData(data);
-    });
-
-    return () => {
-      socket.off('messages');
-      socket.disconnect();
-    }
-  }, []);
+  socket.on('messages', data => {
+    setData(data);
+  });
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = (idEmail) => {
