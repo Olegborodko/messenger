@@ -19,3 +19,9 @@ Refresh Token
 - access токен обычно выдается на 1 час
 - токены лучше всего хранить в HTTP-only cookie
   либо в localStorage (что менее безопасно)
+
+  что-бы получить refresh token нужно 
+  - на фронтенде установить параметр flow: 'auth-code'
+  - на бекенде получить код, и передать его в client.getToken
+  client при этом объявляется без redirect_url
+  const client = new OAuth2Client(googleClientId, googleClientSecret, 'postmessage');

@@ -3,13 +3,12 @@ const { OAuth2Client } = require('google-auth-library');
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const client = new OAuth2Client(googleClientId, googleClientSecret);
+const client = new OAuth2Client(googleClientId, googleClientSecret, 'postmessage');
 
 async function verifyToken(accessToken) {
   try {
     const tokenInfo = await client.getTokenInfo(accessToken);
     const userEmail = tokenInfo.email;
-    console.log(userEmail);
 
     const currentTime = Math.floor(Date.now() / 1000);
     const exp = tokenInfo.exp;
@@ -30,4 +29,13 @@ function checkEmail(userEmail) {
   return process.env.CORRECT_USER === userEmail ? userEmail : null;
 }
 
-module.exports = { verifyToken, checkEmail };
+async function getTokens(authCode) {
+  try {
+    const { tokens } = await client.getToken(authCode);
+    return tokens;
+  } catch (error) {
+    return null;
+  }
+}
+
+module.exports = { verifyToken, checkEmail, getTokens };

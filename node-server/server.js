@@ -10,7 +10,7 @@ const path = require('path');
 const socketIo = require('socket.io');
 const sendEmail = require('./parts/sendToGmail');
 const { Message, mongoose } = require('./db/models/messageModel');
-const { verifyToken } = require('./parts/googleAuth');
+const { verifyToken, getTokens } = require('./parts/googleAuth');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -132,13 +132,20 @@ io.on('connection', async socket => {
   console.log('Client connected');
 
   socket.on('google-authenticate', async (data) => {
-    if (!data || !data.data || !data.data.access_token) {
+    if (!data || !data.data) {
       socket.isAuthenticated = false;
       socket.disconnect();
       return;
     }
 
-    const token = data.data.access_token;
+    const tokens = await getTokens(data.data);
+    if (!tokens) {
+      socket.isAuthenticated = false;
+      socket.disconnect();
+      return;
+    }
+
+    const token = tokens.access_token;
     await sendMessages(socket, token);
 
     if (socket.isAuthenticated) {

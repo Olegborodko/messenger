@@ -10,9 +10,10 @@ const AuthorizationPage = () => {
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      socket.emit('google-authenticate', { data: tokenResponse });
+      socket.emit('google-authenticate', { data: tokenResponse.code });
       navigate('/main');
-    }
+    },
+    flow: 'auth-code',
   });
 
   return (
