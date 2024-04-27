@@ -1,9 +1,6 @@
 require('dotenv').config();
-const { OAuth2Client } = require('google-auth-library');
-
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const client = new OAuth2Client(googleClientId, googleClientSecret, 'postmessage');
+const { clientReadyOAuth2 } = require ('./initAuthClient');
+const client = clientReadyOAuth2;
 
 async function verifyToken(accessToken) {
   try {

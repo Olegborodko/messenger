@@ -16,8 +16,8 @@ const HomePage = () => {
   });
 
   const handleCloseModal = () => setShowModal(false);
-  const handleShowModal = (idEmail) => {
-    setFormData({ ...formData, subject: '', message: '', idEmail });
+  const handleShowModal = (el) => {
+    setFormData({ ...formData, subject: '', message: '', idEmail: el.idEmail, emailTo: el.email });
     setShowModal(true);
   }
 
@@ -29,6 +29,8 @@ const HomePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('formData ', formData);
+
       const response = await axios.post(backendUrl + '/send-email', { formData });
       console.log(response);
     } catch (error) {
@@ -43,16 +45,16 @@ const HomePage = () => {
         return (
           <div className='email-block' key={el._id}>
             <div>
-              {el.idEmail} | {el.date}
+              {el.idEmail} | {el.email} | {el.date}
             </div>
             <div>
-              {el.from} | {el.subject}
+              {el.name} | {el.subject}
             </div>
             <div>
               {el.body}
             </div>
             <div>
-              <Button variant="primary" onClick={() => handleShowModal(el.idEmail)}>
+              <Button variant="primary" onClick={() => handleShowModal(el)}>
                 Answer
               </Button>
             </div>

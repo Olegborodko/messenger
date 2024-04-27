@@ -8,7 +8,7 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const socketIo = require('socket.io');
-const sendEmail = require('./parts/sendToGmail');
+const { fnSendMail } = require('./parts/initAuthClient');
 const { Message, mongoose } = require('./db/models/messageModel');
 const { verifyToken, getTokens } = require('./parts/googleAuth');
 
@@ -97,16 +97,25 @@ app.post('/webhook', async (req, res, next) => {
 //   res.send(messages);
 // });
 
-app.get('/send-email', async (req, res, next) => {
-  let send = await sendEmail({
-    from: process.env.MAIL_FROM,
-    to: process.env.MAIL_TO,
-    subject: 'test subject',
-    // text: 'text without html'
-    html: '<p>test your letter in HTML form</p>'
-  });
+app.post('/send-email', async (req, res, next) => {
+  const formData = req.body;
 
-  if (send.success) {
+  if (!formData.formData || !formData.formData.subject ||
+    !formData.formData.idEmail || !formData.formData.emailTo) {
+    next(errorFill({ status: 500, message: '' }));
+  }
+
+  let data = formData.formData;
+
+  const mailOptions = {
+    from: process.env.MAIL_USER,
+    to: data.emailTo,
+    subject: data.subject,
+    html: data.message
+  };
+
+  let send = await fnSendMail(mailOptions);
+  if (send) {
     res.status(200).end();
   } else {
     next(errorFill({ status: 500, message: send.body }));
@@ -145,12 +154,11 @@ io.on('connection', async socket => {
       return;
     }
 
-    const token = tokens.access_token;
-    await sendMessages(socket, token);
+    await sendMessages(socket, tokens.access_token);
 
     if (socket.isAuthenticated) {
       intervalId = setInterval(async () => {
-        await sendMessages(socket, token);
+        await sendMessages(socket, tokens.access_token);
       }, process.env.REFRESH_MESSAGES_INTERVAL);
     }
   });

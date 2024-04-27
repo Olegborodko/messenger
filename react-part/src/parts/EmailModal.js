@@ -7,7 +7,7 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData })
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Send mail | {formData.idEmail}</Modal.Title>
+        <Modal.Title>Send mail to {formData.emailTo}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -20,6 +20,8 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData })
             <Form.Label>Message</Form.Label>
             <Form.Control as="textarea" rows={3} placeholder="Enter text" name="message" value={formData.message} onChange={handleChange} />
           </Form.Group>
+
+          <input type="hidden" name="emailTo" value={formData.emailTo} />
           <br />
           <div className='modal-footer'>
             <Button variant="secondary" onClick={handleClose}>
