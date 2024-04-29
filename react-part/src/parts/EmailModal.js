@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import WebSpeeshBtn from './WebSpeeshBtn';
 
 const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData }) => {
   return (
@@ -24,6 +25,7 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData })
           <input type="hidden" name="emailTo" value={formData.emailTo} />
           <br />
           <div className='modal-footer'>
+            <WebSpeeshBtn />
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
