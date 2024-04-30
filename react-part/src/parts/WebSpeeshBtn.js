@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 
-const WebSpeeshBtn = () => {
+const WebSpeeshBtn = ({ onChangeTranscription }) => {
   const [recognition, setRecognition] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [transcription, setTranscription] = useState('');
+  const [, setTranscription] = useState('');
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
@@ -32,6 +32,7 @@ const WebSpeeshBtn = () => {
 
   const handleTranscription = (transcript) => {
     setTranscription(transcript);
+    onChangeTranscription(transcript);
   }
 
   const handleButtonClick = () => {
@@ -48,11 +49,9 @@ const WebSpeeshBtn = () => {
   };
 
   return (
-    <>
-      <Button variant="secondary" onClick={handleButtonClick}>
-        {isRecording ? "Stop record" : "Record message" }
-      </Button>
-    </>
+    <Button variant="secondary" onClick={handleButtonClick}>
+      {isRecording ? "Stop record" : "Record message"}
+    </Button>
   );
 }
 

@@ -26,6 +26,10 @@ const HomePage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleTranscription = (data) => {
+    setFormData({ ...formData, message: data });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,6 +71,7 @@ const HomePage = () => {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}
+        handleTranscription={handleTranscription}
       />
     </div>
   );

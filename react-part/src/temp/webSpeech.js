@@ -46,7 +46,6 @@ const SpeechRecognitionButton = () => {
             </button>
             <div>
                 <h3>Транскрипция:</h3>
-                <p>{transcription}</p>
             </div>
         </div>
     );
