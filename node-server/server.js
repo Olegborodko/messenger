@@ -11,6 +11,7 @@ const socketIo = require('socket.io');
 const { fnSendMail } = require('./parts/initAuthClient');
 const { Message, mongoose } = require('./db/models/messageModel');
 const { verifyToken, getTokens } = require('./parts/googleAuth');
+const userSession = require('./parts/userSession');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -107,14 +108,18 @@ app.post('/send-email', async (req, res, next) => {
 
   let data = formData.formData;
 
+  let email = userSession.getCurrentValue(process.env.CORRECT_USER);
+  let appPassword = userSession.getCurrentValue(process.env.APP_PASSWORD);
+
   const mailOptions = {
-    from: process.env.MAIL_USER,
+    from: email,
     to: data.emailTo,
     subject: data.subject,
     html: data.message
   };
 
-  let send = await fnSendMail(mailOptions);
+
+  let send = await fnSendMail(mailOptions, email, appPassword);
   if (send) {
     res.status(200).end();
   } else {

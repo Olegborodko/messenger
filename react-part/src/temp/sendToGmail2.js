@@ -7,7 +7,6 @@ const { google } = require('googleapis');
 // const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 
 let transporter = nodemailer.createTransport({
-  // service: process.env.MAIL_SERVICE,
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,

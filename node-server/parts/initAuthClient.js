@@ -1,20 +1,19 @@
-require('./constants');
-const { OAuth2Client, google } = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const nodemailer = require('nodemailer');
 
 const clientReadyOAuth2 = new OAuth2Client(
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
   'postmessage'
 );
 
-async function fnSendMail(mailOptions) {
+async function fnSendMail(mailOptions, mailUser, appPassword) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       type: 'login',
-      user: MAIL_USER,
-      pass: APP_PASSWORD
+      user: mailUser,
+      pass: appPassword
     }
   });
 

@@ -1,6 +1,7 @@
 require('dotenv').config();
-const { clientReadyOAuth2 } = require ('./initAuthClient');
+const { clientReadyOAuth2 } = require('./initAuthClient');
 const client = clientReadyOAuth2;
+const userSession = require('./userSession');
 
 async function verifyToken(accessToken) {
   try {
@@ -23,7 +24,21 @@ async function verifyToken(accessToken) {
 }
 
 function checkEmail(userEmail) {
-  return process.env.CORRECT_USER === userEmail ? userEmail : null;
+  return getEmailIndex(userEmail) !== null ? userEmail : null;
+}
+
+function getEmailIndex(userEmail) {
+  const correctUser = process.env.CORRECT_USER;
+  const emails = correctUser.split('|');
+
+  const index = emails.indexOf(userEmail);
+
+  if (index > -1) {
+    userSession.setCurrentIndex(index);
+    return index;
+  } else {
+    return null
+  }
 }
 
 async function getTokens(authCode) {
@@ -35,4 +50,4 @@ async function getTokens(authCode) {
   }
 }
 
-module.exports = { verifyToken, checkEmail, getTokens };
+module.exports = { verifyToken, getTokens };
