@@ -30,6 +30,10 @@ const HomePage = () => {
     setFormData({ ...formData, message: data });
   }
 
+  const handleOpenAiBtnClick = (data) => {
+    setFormData({ ...formData, message: data });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -72,6 +76,7 @@ const HomePage = () => {
         handleSubmit={handleSubmit}
         formData={formData}
         handleTranscription={handleTranscription}
+        handleOpenAiBtnClick={handleOpenAiBtnClick}
       />
     </div>
   );

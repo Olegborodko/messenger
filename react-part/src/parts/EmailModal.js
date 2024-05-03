@@ -3,8 +3,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import WebSpeeshBtn from './WebSpeeshBtn';
+import OpenAiBtn from './OpenAIBtn';
 
-const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, handleTranscription }) => {
+const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, handleTranscription, handleOpenAiBtnClick }) => {
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -26,10 +27,11 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
           <input type="hidden" name="emailTo" value={formData.emailTo} />
           <br />
           <div className='modal-footer'>
-            <WebSpeeshBtn onChangeTranscription={handleTranscription} />
-            <Button variant="secondary" onClick={handleClose}>
+            {/* <Button variant="secondary" onClick={handleClose}>
               Close
-            </Button>
+            </Button> */}
+            <WebSpeeshBtn onChangeTranscription={handleTranscription} />
+            <OpenAiBtn data={formData.message} handleOpenAiBtnClick={handleOpenAiBtnClick} />
             <Button variant="primary" type="submit">
               Send
             </Button>

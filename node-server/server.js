@@ -12,6 +12,7 @@ const { fnSendMail } = require('./parts/initAuthClient');
 const { Message, mongoose } = require('./db/models/messageModel');
 const { verifyToken, getTokens } = require('./parts/googleAuth');
 const userSession = require('./parts/userSession');
+const { transformText } = require('./parts/openAI');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -97,6 +98,25 @@ app.post('/webhook', async (req, res, next) => {
 //   const messages = await Message.find();
 //   res.send(messages);
 // });
+
+app.post('/open-ai', async (req, res, next) => {
+  const data = req.body;
+  if (!data || !data.data) {
+    next(errorFill({ status: 500, message: 'Invalid request data' }));
+  }
+
+  try {
+    let result = await transformText(data.data);
+
+    if (result) {
+      res.status(200).json({ result });
+    } else {
+      next(errorFill({ status: 500, message: 'Failed to transform text' }));
+    }
+  } catch (error) {
+    next(errorFill({ status: 500, message: error.message }));
+  }
+});
 
 app.post('/send-email', async (req, res, next) => {
   const formData = req.body;
