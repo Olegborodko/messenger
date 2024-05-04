@@ -141,7 +141,15 @@ app.post('/send-email', async (req, res, next) => {
 
   let send = await fnSendMail(mailOptions, email, appPassword);
   if (send) {
-    res.status(200).end();
+    let oneMessage = await Message.findOne({ idEmail: data.idEmail });
+
+    if (oneMessage) {
+      oneMessage.answer = data.message;
+      await oneMessage.save();
+      res.status(200).json({ idEmail: data.idEmail });
+    } else {
+      next(errorFill({ status: 500, message: "db is not connection" }));
+    }
   } else {
     next(errorFill({ status: 500, message: send.body }));
   }

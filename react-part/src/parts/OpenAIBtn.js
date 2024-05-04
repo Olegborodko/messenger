@@ -19,7 +19,7 @@ const OpenAiBtn = ({ data, handleOpenAiBtnClick }) => {
   };
 
   return (
-    <Button variant="secondary" onClick={handleButtonClick}>
+    <Button onClick={handleButtonClick}>
       Ai change text
     </Button>
   );

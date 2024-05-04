@@ -14,8 +14,6 @@ class UserSession {
   getCurrentValue(value) {
     const arr = value.split('|');
 
-    console.log(arr[this.currentIndex]);
-
     if (arr[this.currentIndex]) {
       return arr[this.currentIndex];
     } else {

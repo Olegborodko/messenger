@@ -10,7 +10,6 @@ const AuthorizationPage = () => {
 
   const handleInitialize = (response) => {
     let userObj = jwtDecode(response.credential);
-    console.log(userObj);
     setUser(userObj);
   }
 

@@ -1,8 +1,18 @@
 html, body{
   margin: 0;
-  padding: 0;
+  padding: 5px;
 }
 
 .email-block{
   padding-bottom: 1.26rem; //20
+}
+
+.ft-14{
+  font-size: 14px;
+}
+
+.success-letter{
+  color: green;
+  font-size: 23px;
+  padding-left: 10px;
 }

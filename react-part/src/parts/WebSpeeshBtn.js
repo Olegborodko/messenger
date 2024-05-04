@@ -49,7 +49,7 @@ const WebSpeeshBtn = ({ onChangeTranscription }) => {
   };
 
   return (
-    <Button variant="secondary" onClick={handleButtonClick}>
+    <Button onClick={handleButtonClick}>
       {isRecording ? "Stop record" : "Record message"}
     </Button>
   );

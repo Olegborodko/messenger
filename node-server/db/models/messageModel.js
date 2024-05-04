@@ -8,6 +8,7 @@ const messageSchema = new mongoose.Schema({
   body: String,
   date: String,
   status: String,
+  answer: String,
 }, { strict: 'throw' });
 
 const Message = mongoose.model('Message', messageSchema);
