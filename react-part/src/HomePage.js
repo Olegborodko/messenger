@@ -67,7 +67,7 @@ const HomePage = () => {
           <div className='email-block' key={el._id}>
             <div>
               <b>from:</b> <span className="ft-14">{el.email}</span> <b>date:</b> <span className="ft-14">{formatDate(el.date)}</span>
-              {el.answer !== "" || answerCarrent === el.idEmail ? (<span className="success-letter">✓</span>) : ""}
+              {(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? (<span className="success-letter">✓</span>) : ""}
             </div>
             <div>
               <b>name:</b> {el.name} <b>subject:</b> {el.subject}
@@ -80,8 +80,8 @@ const HomePage = () => {
             </div>
             )}
             <div>
-              <Button variant={el.answer !== "" || answerCarrent === el.idEmail ? "info" : "primary"} onClick={() => handleShowModal(el)}>
-                {el.answer !== "" || answerCarrent === el.idEmail ? "Answer again" : "Answer"}
+              <Button variant={(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? "info" : "primary"} onClick={() => handleShowModal(el)}>
+                {(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? "Answer again" : "Answer"}
               </Button>
             </div>
           </div>
