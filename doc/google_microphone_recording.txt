@@ -1,0 +1,6 @@
+npm i @google-cloud/speech
+
+sudo apt-get install sox
+
+npm i node-record-lpcm16
+

@@ -13,6 +13,7 @@ const { Message, mongoose } = require('./db/models/messageModel');
 const { verifyToken, getTokens } = require('./parts/googleAuth');
 const userSession = require('./parts/userSession');
 const { transformText } = require('./parts/openAI');
+const { startRecording, stopRecording } = require('./parts/googleSpeech');
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -59,6 +60,30 @@ const errorHandling = (err, req, res, next) => {
     status: err.status,
   });
 };
+
+app.post('/google-speech', async (req, res, next) => {
+  const data = req.body;
+
+  if (!data || !data.isRecording) {
+    next(errorFill({ status: 500, message: 'Invalid request data' }));
+  }
+
+  if (data.isRecording === 'false') {
+    console.log('start recording');
+    startRecording();
+    res.status(200).json({ result: '' });
+    return;
+  }
+
+  if (data.isRecording === 'true') {
+    console.log('stop recording');
+    let result = await stopRecording();
+    res.status(200).json({ result });
+    return;
+  }
+
+  next(errorFill({ status: 500, message: '' }));
+});
 
 app.get('/test', (req, res) => {
   res.send('TEST SERVER');

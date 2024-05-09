@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import WebSpeeshBtn from './WebSpeeshBtn';
 import OpenAiBtn from './OpenAIBtn';
+import SpeechGoogleBtn from './SpeechGoogleBtn';
 
 const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, handleTranscription, handleOpenAiBtnClick }) => {
   const [fieldsIsEmpty, setFieldsIsEmpty] = useState(true);
@@ -41,7 +42,8 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
             {/* <Button variant="secondary" onClick={handleClose}>
               Close
             </Button> */}
-            <WebSpeeshBtn onChangeTranscription={handleTranscription} />
+            {/* <WebSpeeshBtn onChangeTranscription={handleTranscription} /> */}
+            <SpeechGoogleBtn onChangeTranscription={handleTranscription} />
             <OpenAiBtn data={formData.message} handleOpenAiBtnClick={handleOpenAiBtnClick} />
             <Button variant="primary" type="submit" disabled={fieldsIsEmpty}>
               Send
