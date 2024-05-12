@@ -19,7 +19,7 @@ async function fnSendMail(mailOptions, mailUser, appPassword) {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.response);
+    // console.log('Email sent:', info.response);
     return true;
   } catch (error) {
     console.error('Error occurred:', error);

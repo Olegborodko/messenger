@@ -1,43 +1,84 @@
 import React, { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import RecordRTC from 'recordrtc';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const SpeechGoogleBtn = ({ onChangeTranscription }) => {
-  const [isRecording, setIsRecording] = useState(false);
+  const [recorder, setRecorder] = useState(null);
 
-  const sendRequest = async () => {
-    const response = await axios.post(backendUrl + '/google-speech', { isRecording: String(isRecording) });
-    if (response && response.status === 200) {
-      onChangeTranscription(response.data.result);
-      setIsRecording(!isRecording);
-      return true;
-    } else {
-      return false;
-    }
-  }
+  const sendRequest = async (file) => {
+    const formData = new FormData();
+    formData.append('audio', file, 'recording.wav');
 
-  const toggleRecording = async () => {
     try {
-      if (!isRecording) {
-        await sendRequest();
-      }
+      const response = await axios.post(backendUrl + '/google-speech', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
-      if (isRecording) {
-        // return result;
-        await sendRequest();
+      if (response && response.status === 200) {
+        onChangeTranscription(response.data.result);
+      } else {
+        console.error('Error uploading audio');
       }
     } catch (error) {
-      console.error('Error ', error);
+      console.error('Error uploading audio:', error);
     }
   }
+
+  const stopRecording = () => {
+    if (recorder) {
+      recorder.stopRecording(() => {
+        const blob = recorder.getBlob();
+        // const audioUrl = URL.createObjectURL(blob);
+
+        if (recorder && recorder.stream) {
+          recorder.stream.stop();
+        }
+
+        if (recorder && recorder.stream) {
+          recorder.stream.getTracks().forEach(track => {
+            track.stop();
+          });
+        }
+
+        sendRequest(blob);
+      });
+
+      setRecorder(null);
+    }
+  };
+
+  const startRecording = async () => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        const options = {
+          type: 'audio',
+          mimeType: 'audio/wav',
+          recorderType: RecordRTC.StereoAudioRecorder,
+          numberOfAudioChannels: 1
+        };
+        const record = RecordRTC(stream, options);
+        record.startRecording();
+        setRecorder(record);
+      })
+      .catch(error => console.error('getUserMedia error:', error));
+  };
 
   return (
     <div>
-      <Button onClick={toggleRecording}>
-        {isRecording ? 'Stop recording' : 'Start recording'}
-      </Button>
+      {recorder ? (
+        <Button onClick={stopRecording}>
+          Stop recording
+        </Button>
+      ) : (
+        <Button onClick={startRecording}>
+          Start Recording
+        </Button>
+      )}
     </div>
   );
 }

@@ -1,90 +1,42 @@
-require('dotenv').config();
-const recorder = require('node-record-lpcm16');
 const speech = require('@google-cloud/speech');
+const speechClient = new speech.SpeechClient();
+const player = require('play-sound')();
+const fs = require('fs');
 
-const client = new speech.SpeechClient();
-
-// Define the required parameters
-const encoding = 'LINEAR16';
-const sampleRateHertz = 16000;
-const languageCode = 'en-US'; //'ru-Ru' en-US
-
-const request = {
-  config: {
-    encoding: encoding,
-    sampleRateHertz: sampleRateHertz,
-    languageCode: languageCode,
-  },
-  interimResults: false, // If you want interim results, set this to true
-};
-
-let recognizeStream;
-let recordingStream;
-let resultRecording;
-let recordingTimer;
-
-async function startRecording() {
-  resultRecording = "";
-  recognizeStream = false;
-  recordingStream = false;
-  clearTimeout(recordingTimer);
-  recordingTimer = null;
-
-  recognizeStream = client
-    .streamingRecognize(request)
-    .on('error', () => {
-      stopRecording();
-    })
-    .on('data', data => {
-      if (data.results && data.results[0] && data.results[0].alternatives && data.results[0].alternatives[0]) {
-        resultRecording = resultRecording + `${data.results[0].alternatives[0].transcript}`;
-        // console.log(`Transcription: ${data.results[0].alternatives[0].transcript}`);
+function recognizeSpeech(audio, config) {
+  return new Promise((resolve, reject) => {
+    speechClient.recognize({ audio, config }, (err, response) => {
+      if (err) {
+        reject(err);
       } else {
-        console.log('\n\nReached transcription time limit, press Ctrl+C\n');
+        resolve(response);
       }
-    });
-
-  recordingStream = recorder
-    .record({
-      sampleRateHertz: sampleRateHertz,
-      threshold: 0,
-      verbose: false,
-      recordProgram: 'rec',
-      silence: '10.0',
-    })
-    .stream()
-    .on('error', console.error)
-    .pipe(recognizeStream);
-
-  recordingTimer = setTimeout(stopRecording, 30000);
-}
-
-async function stopRecording() {
-  return new Promise((resolve) => {
-    if (recordingTimer) {
-      clearTimeout(recordingTimer);
-      recordingTimer = null;
-    }
-  
-    // Close the recognize stream
-    if (recognizeStream) {
-      recognizeStream.end();
-    }
-  
-    // Stop recording stream
-    if (recordingStream) {
-      recordingStream.end();
-      console.log('Recording stopped.');
-    }
-
-    recordingStream.on('end', () => {
-      resolve(resultRecording);
     });
   });
 }
 
-// function delay(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
+async function googleGetTranscription(filePath) {
+  try {
+    const file = fs.readFileSync(filePath);
 
-module.exports = { startRecording, stopRecording };
+    const audio = {
+      content: file.toString('base64')
+    };
+    const config = {
+      encoding: 'LINEAR16',
+      sampleRateHertz: 44100,
+      languageCode: 'en-US'  //'en-US', //
+    };
+
+    const response = await recognizeSpeech(audio, config);
+
+    const transcription = response.results.map(result => result.alternatives[0].transcript).join('\n');
+
+    return transcription;
+  } catch (error) {
+    console.error('Error processing audio file:', error);
+    return false;
+  }
+}
+
+module.exports = { googleGetTranscription };

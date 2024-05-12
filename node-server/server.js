@@ -13,7 +13,10 @@ const { Message, mongoose } = require('./db/models/messageModel');
 const { verifyToken, getTokens } = require('./parts/googleAuth');
 const userSession = require('./parts/userSession');
 const { transformText } = require('./parts/openAI');
-const { startRecording, stopRecording } = require('./parts/googleSpeech');
+const { googleGetTranscription } = require('./parts/googleSpeech');
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const buildPath = path.join(__dirname, '../react-part/build');
 
@@ -61,28 +64,16 @@ const errorHandling = (err, req, res, next) => {
   });
 };
 
-app.post('/google-speech', async (req, res, next) => {
-  const data = req.body;
+app.post('/google-speech', upload.single('audio'), async (req, res, next) => {
+  try {
+    const filePath = req.file.path;
 
-  if (!data || !data.isRecording) {
-    next(errorFill({ status: 500, message: 'Invalid request data' }));
+    let transcript = await googleGetTranscription(filePath);
+
+    res.status(200).json({ result: transcript });
+  } catch (error) {
+    next(errorFill({ status: 500, message: error }));
   }
-
-  if (data.isRecording === 'false') {
-    console.log('start recording');
-    startRecording();
-    res.status(200).json({ result: '' });
-    return;
-  }
-
-  if (data.isRecording === 'true') {
-    console.log('stop recording');
-    let result = await stopRecording();
-    res.status(200).json({ result });
-    return;
-  }
-
-  next(errorFill({ status: 500, message: '' }));
 });
 
 app.get('/test', (req, res) => {
