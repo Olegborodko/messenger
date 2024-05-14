@@ -20,7 +20,7 @@ const HomePage = () => {
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = (el) => {
-    setFormData({ ...formData, subject: '', message: '', idEmail: el.idEmail, emailTo: el.email });
+    setFormData({ ...formData, subject: el.subject, message: '', idEmail: el.idEmail, emailTo: el.email });
     setShowModal(true);
   }
 
@@ -61,7 +61,7 @@ const HomePage = () => {
   }
 
   return (
-    <div>
+    <div className="home-page">
       {data.map(function (el) {
         return (
           <div className='email-block' key={el._id}>
@@ -71,7 +71,7 @@ const HomePage = () => {
             </div>
             <div>
               <b>name:</b> {el.name} <b>subject:</b> {el.subject}
-            </div>0972834158
+            </div>
             <div>
               <b>text:</b> {el.body}
             </div>
@@ -79,7 +79,7 @@ const HomePage = () => {
               <b>answer:</b> {el.answer}
             </div>
             )}
-            <div>
+            <div className='answer-btn-block'>
               <Button variant={(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? "info" : "primary"} onClick={() => handleShowModal(el)}>
                 {(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? "Answer again" : "Answer"}
               </Button>

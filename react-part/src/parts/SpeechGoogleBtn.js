@@ -7,6 +7,7 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const SpeechGoogleBtn = ({ onChangeTranscription }) => {
   const [recorder, setRecorder] = useState(null);
+  const activityTimerRef = useRef(null);
 
   const sendRequest = async (file) => {
     const formData = new FormData();
@@ -29,6 +30,25 @@ const SpeechGoogleBtn = ({ onChangeTranscription }) => {
     }
   }
 
+  const stopRecordingWithoutRequest = () => {
+    if (recorder) {
+      recorder.stopRecording(() => {
+        if (recorder && recorder.stream) {
+          recorder.stream.stop();
+        }
+
+        if (recorder && recorder.stream) {
+          recorder.stream.getTracks().forEach(track => {
+            track.stop();
+          });
+        }
+      });
+    }
+
+    setRecorder(null);
+    clearInterval(activityTimerRef.current);
+  }
+
   const stopRecording = () => {
     if (recorder) {
       recorder.stopRecording(() => {
@@ -49,6 +69,7 @@ const SpeechGoogleBtn = ({ onChangeTranscription }) => {
       });
 
       setRecorder(null);
+      clearInterval(activityTimerRef.current);
     }
   };
 
@@ -64,6 +85,11 @@ const SpeechGoogleBtn = ({ onChangeTranscription }) => {
         const record = RecordRTC(stream, options);
         record.startRecording();
         setRecorder(record);
+
+        activityTimerRef.current = setInterval(() => {
+          console.log('stopRecordingWithoutRequest');
+          stopRecordingWithoutRequest();
+        }, 30000);
       })
       .catch(error => console.error('getUserMedia error:', error));
   };

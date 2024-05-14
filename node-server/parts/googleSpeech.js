@@ -35,7 +35,7 @@ async function googleGetTranscription(filePath) {
     return transcription;
   } catch (error) {
     console.error('Error processing audio file:', error);
-    return false;
+    return error;
   }
 }
 

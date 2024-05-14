@@ -10,7 +10,7 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
   const [fieldsIsEmpty, setFieldsIsEmpty] = useState(true);
 
   useEffect(() => {
-    if (formData.message.length > 0 && formData.subject.length > 0) {
+    if (formData.message.length > 0) {
       setFieldsIsEmpty(false);
     } else {
       setFieldsIsEmpty(true);
@@ -26,11 +26,6 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicSubject">
-            <Form.Label>Subject *</Form.Label>
-            <Form.Control type="text" placeholder="Enter subject" name="subject" value={formData.subject} onChange={handleChange} className={fieldsIsEmpty ? 'is-invalid' : ''} />
-          </Form.Group>
-
           <Form.Group controlId="formBasicTextarea">
             <Form.Label>Message *</Form.Label>
             <Form.Control as="textarea" rows={3} placeholder="Enter text" name="message" value={formData.message} onChange={handleChange} className={fieldsIsEmpty ? 'is-invalid' : ''} />

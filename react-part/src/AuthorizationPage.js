@@ -17,8 +17,8 @@ const AuthorizationPage = () => {
   });
 
   return (
-    <div>
-      <Button onClick={() => login()}>Sign in with Google</Button>
+    <div className="authorization-page">
+      <Button className="signInBtn" onClick={() => login()}>Sign in with Google</Button>
     </div>
   );
 }
