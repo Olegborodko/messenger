@@ -141,8 +141,10 @@ app.post('/open-ai', async (req, res, next) => {
 app.post('/send-email', async (req, res, next) => {
   const formData = req.body;
 
+  console.log('formData ', formData);
+
   if (!formData.formData || !formData.formData.subject ||
-    !formData.formData.idEmail || !formData.formData.emailTo) {
+    !formData.formData.idEmail || !formData.formData.fromEmail) {
     next(errorFill({ status: 500, message: '' }));
   }
 
@@ -153,7 +155,7 @@ app.post('/send-email', async (req, res, next) => {
 
   const mailOptions = {
     from: email,
-    to: data.emailTo,
+    to: data.fromEmail,
     subject: data.subject,
     html: data.message
   };

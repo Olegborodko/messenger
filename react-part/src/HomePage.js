@@ -20,7 +20,7 @@ const HomePage = () => {
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = (el) => {
-    setFormData({ ...formData, subject: el.subject, message: '', idEmail: el.idEmail, emailTo: el.email });
+    setFormData({ ...formData, subject: el.subject, message: '', idEmail: el.idEmail, fromEmail: el.fromEmail });
     setShowModal(true);
   }
 
