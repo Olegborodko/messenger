@@ -15,7 +15,7 @@ function recognizeSpeech(audio, config) {
   });
 }
 
-async function googleGetTranscription(filePath) {
+async function googleGetTranscription(filePath, sampleRateHertz) {
   try {
     const file = fs.readFileSync(filePath);
 
@@ -24,7 +24,7 @@ async function googleGetTranscription(filePath) {
     };
     const config = {
       encoding: 'LINEAR16',
-      sampleRateHertz: 44100,
+      sampleRateHertz,
       languageCode: 'en-US'  //'en-US', //
     };
 

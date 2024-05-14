@@ -68,7 +68,11 @@ app.post('/google-speech', upload.single('audio'), async (req, res, next) => {
   try {
     const filePath = req.file.path;
 
-    let transcript = await googleGetTranscription(filePath);
+    if (!req.body.sampleRateHertz){
+      next(errorFill({ status: 500, message: 'error parameters' }));
+    }
+
+    let transcript = await googleGetTranscription(filePath, req.body.sampleRateHertz);
 
     res.status(200).json({ result: transcript });
   } catch (error) {

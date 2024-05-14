@@ -8,10 +8,12 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const SpeechGoogleBtn = ({ onChangeTranscription }) => {
   const [recorder, setRecorder] = useState(null);
   const activityTimerRef = useRef(null);
+  const [sampleRateHertz, setSampleRateHertz] = useState(null);
 
   const sendRequest = async (file) => {
     const formData = new FormData();
     formData.append('audio', file, 'recording.wav');
+    formData.append('sampleRateHertz', sampleRateHertz);
 
     try {
       const response = await axios.post(backendUrl + '/google-speech', formData, {
@@ -76,6 +78,11 @@ const SpeechGoogleBtn = ({ onChangeTranscription }) => {
   const startRecording = async () => {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        const sampleRate = audioContext.sampleRate;
+        setSampleRateHertz(sampleRate);
+
         const options = {
           type: 'audio',
           mimeType: 'audio/wav',
