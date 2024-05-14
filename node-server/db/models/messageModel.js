@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   idEmail: String,
-  from: String,
+  fromName: String,
+  fromEmail: String,
   subject: String,
   body: String,
   date: String,

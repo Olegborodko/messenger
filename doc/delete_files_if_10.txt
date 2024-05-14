@@ -1,0 +1,32 @@
+const fs = require('fs');
+const glob = require('glob');
+
+const uploadsFolder = '/path/to/uploads'; // Путь к вашей папке uploads
+const maxFiles = 10; // Максимальное количество файлов
+
+function cleanupUploadsFolder() {
+    glob(`${uploadsFolder}/*`, (err, files) => {
+        if (err) {
+            console.error('Error reading directory:', err);
+            return;
+        }
+
+        files.sort((a, b) => fs.statSync(a).ctimeMs - fs.statSync(b).ctimeMs); // Сортировка по времени создания
+
+        const numFiles = files.length;
+        if (numFiles > maxFiles) {
+            const filesToDelete = files.slice(0, numFiles - maxFiles); // Файлы, которые нужно удалить
+            filesToDelete.forEach(file => {
+                fs.unlink(file, err => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    } else {
+                        console.log('Deleted:', file);
+                    }
+                });
+            });
+        }
+    });
+}
+
+cleanupUploadsFolder();

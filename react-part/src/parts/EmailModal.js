@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import WebSpeeshBtn from './WebSpeeshBtn';
 import OpenAiBtn from './OpenAIBtn';
 import SpeechGoogleBtn from './SpeechGoogleBtn';
 
@@ -22,7 +21,7 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Send mail to {formData.emailTo}</Modal.Title>
+        <Modal.Title>Send mail to {formData.fromEmail}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -31,7 +30,7 @@ const EmailModal = ({ show, handleClose, handleSubmit, handleChange, formData, h
             <Form.Control as="textarea" rows={3} placeholder="Enter text" name="message" value={formData.message} onChange={handleChange} className={fieldsIsEmpty ? 'is-invalid' : ''} />
           </Form.Group>
 
-          <input type="hidden" name="emailTo" value={formData.emailTo} />
+          <input type="hidden" name="emailTo" value={formData.fromEmail} />
           <br />
           <div className='modal-footer'>
             {/* <Button variant="secondary" onClick={handleClose}>

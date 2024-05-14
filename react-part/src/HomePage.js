@@ -66,11 +66,11 @@ const HomePage = () => {
         return (
           <div className='email-block' key={el._id}>
             <div>
-              <b>from:</b> <span className="ft-14">{el.email}</span> <b>date:</b> <span className="ft-14">{formatDate(el.date)}</span>
+              <b>from:</b> <span className="ft-14">{el.fromEmail}</span> <b>date:</b> <span className="ft-14">{formatDate(el.date)}</span>
               {(el.answer && el.answer !== "") || answerCarrent === el.idEmail ? (<span className="success-letter">✓</span>) : ""}
             </div>
             <div>
-              <b>name:</b> {el.name} <b>subject:</b> {el.subject}
+              <b>name:</b> {el.fromName} <b>subject:</b> {el.subject}
             </div>
             <div>
               <b>text:</b> {el.body}
