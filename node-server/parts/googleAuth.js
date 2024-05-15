@@ -1,9 +1,8 @@
 require('dotenv').config();
 const { clientReadyOAuth2 } = require('./initAuthClient');
 const client = clientReadyOAuth2;
-const userSession = require('./userSession');
 
-async function verifyToken(accessToken) {
+async function verifyToken(accessToken, userSession) {
   try {
     const tokenInfo = await client.getTokenInfo(accessToken);
     const userEmail = tokenInfo.email;
@@ -16,18 +15,18 @@ async function verifyToken(accessToken) {
     if (isExpired) {
       return null;
     } else {
-      return checkEmail(userEmail);
+      return checkEmail(userEmail, userSession);
     }
   } catch (error) {
     return null;
   }
 }
 
-function checkEmail(userEmail) {
-  return getEmailIndex(userEmail) !== null ? userEmail : null;
+function checkEmail(userEmail, userSession) {
+  return getEmailIndex(userEmail, userSession) !== null ? userEmail : null;
 }
 
-function getEmailIndex(userEmail) {
+function getEmailIndex(userEmail, userSession) {
   const correctUser = process.env.CORRECT_USER;
   const emails = correctUser.split('|');
 

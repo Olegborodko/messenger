@@ -141,8 +141,6 @@ app.post('/open-ai', async (req, res, next) => {
 app.post('/send-email', async (req, res, next) => {
   const formData = req.body;
 
-  console.log('formData ', formData);
-
   if (!formData.formData || !formData.formData.subject ||
     !formData.formData.idEmail || !formData.formData.fromEmail) {
     next(errorFill({ status: 500, message: '' }));
@@ -159,7 +157,6 @@ app.post('/send-email', async (req, res, next) => {
     subject: data.subject,
     html: data.message
   };
-
 
   let send = await fnSendMail(mailOptions, email, appPassword);
   if (send) {
@@ -178,7 +175,7 @@ app.post('/send-email', async (req, res, next) => {
 });
 
 const sendMessages = async (socket, token) => {
-  const userEmail = await verifyToken(token);
+  const userEmail = await verifyToken(token, userSession);
   if (!userEmail) {
     socket.isAuthenticated = false;
     socket.disconnect();
