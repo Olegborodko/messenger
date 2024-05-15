@@ -35,7 +35,7 @@ async function googleGetTranscription(filePath, sampleRateHertz) {
     return transcription;
   } catch (error) {
     console.error('Error processing audio file:', error);
-    return JSON.stringify(error);
+    return null;
   }
 }
 
