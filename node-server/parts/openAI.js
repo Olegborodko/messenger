@@ -5,7 +5,7 @@ const openai = new OpenAI();
 async function transformText(originalText) {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
         { role: "user", content: `${process.env.OPEN_API_REQUEST}: ${originalText}` },
